@@ -1,3 +1,8 @@
+<b><p>In order to run the demo you'll need to:</b></p>
+create Maven Run Configuration in Run->Edit Configurations Idea menu. See CreateMavenRunner.png
+
+
+
 <b><p>How Geb framework starts working, step by step: </p></b>
 
 
