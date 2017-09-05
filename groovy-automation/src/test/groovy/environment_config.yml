@@ -1,0 +1,16 @@
+
+local:
+  users:
+      - email: "user1-local@somecompany.com"
+        username: "user1-local"
+      - email: "user2-local@somecompany.com"
+        username: "user2-local"
+  application_portal: "https://www.anywayanyday.com/en/"
+dev:
+  users:
+      - email: "user1-dev@somecompany.com"
+        username: "user1-dev"
+      - email: "user2-dev@somecompany.com"
+        username: "user2-dev"
+  application_portal: "https://www.anywayanyday.com/en/"
+
