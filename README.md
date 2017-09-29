@@ -1,2 +1,2 @@
 # qa-utils
-some useful stufs
+some useful stuff
