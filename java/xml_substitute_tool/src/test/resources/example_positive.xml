@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<UC_STOCK_LEVEL_IFD>
+    <CTRL_SEG>
+        <TRNNAM>"UC_STOCK_ADJUST_replaced"</TRNNAM>
+        <TRNVER>"1700"</TRNVER>
+        <TIMESTAMP>"2018.09.11 00:48:23"</TIMESTAMP>
+        <UUID>"c2a55e8-5a07-4af6-85fd-8290d3ccfb51"</UUID>
+        <WH_ID>"LT2_replaced"</WH_ID>
+        <CLIENT_ID>"CLIE01_replaced"</CLIENT_ID>
+        <ISO_2_CTRY_NAME>"EN_replaced"</ISO_2_CTRY_NAME>
+        <REQUEST_ID>"11111"</REQUEST_ID>
+        <ROUTE_ID>"186"</ROUTE_ID>
+    </CTRL_SEG>
+</UC_STOCK_LEVEL_IFD>
