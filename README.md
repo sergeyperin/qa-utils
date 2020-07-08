@@ -6,7 +6,9 @@ It includes different automation projects such as:
 - C# DB BDD SpecFlow automation
 - Groovy BDD Cucumber browser automation
 - Gatling configs for Grafana/Graphite
-- REST API automation best practises 
+- REST API automation best practises
+- Python hooks & useful scripts
+- java piece of interesting code
 - and some more :)
 
 
