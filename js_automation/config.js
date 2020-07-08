@@ -15,7 +15,7 @@ var getPlatform = function () {
 
 var config = {
     //seleniumAddress: 'http://localhost:4444/wd/hub',
-    baseUrl: 'https://conform5-qa.edetek.com',
+    baseUrl: 'https://some-qa.domain.com',
     capabilities: {
       browserName: 'chrome',
       chromeOptions: {
