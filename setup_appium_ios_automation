@@ -1,0 +1,127 @@
+#  Appium ios automation common preparations, issues, workarounds.
+<br><br>
+
+
+
+
+<b>APPIUM and XCODE SDK DEPENDENCY ISSUE</b><br><br>
+In case, ios sdk version > 10.2, please, ensure, you've installed Xcode 8.3 or higher.<br>
+Mac os should be updated in turn, Xcode 8.3 requires a Mac running macOS 10.12 or later.<br><br>
+Although, it is allowed to have multiple Xcode.<br>
+To switch between Xcodes use the command below:<br><br>
+>sudo xcode-select -switch <path/to/>Xcode.app
+
+Please, for more dependency info, refer to <a>https://en.wikipedia.org/wiki/Xcode</a> "Version comparison table" section<br><br>
+
+<b>MISSING/EXPIRED PRIVATE KEY FOR DEVELOPER ID CERTIFICATE</b><br><br>
+The issue is relevant for testing on real device.
+
+Signing your app allows iOS to identify who signed your app and to verify that your app hasn’t been modified since you signed it. The Signing Identity consists of a public-private key pair that Apple creates for you. Think about the public-key as a lock-only mechanism, so you need to know the private key to unwrap, unlock or decode data again.<br>
+<br>Where do the public and private key-pair come from and how do you request a certificate containing them? All this magic happens when you create a Certificate Signing Request (CSR) through the Keychain Access Application. If you do so, the Keychain Application will create a private key and a certSigningRequest file which you’ll then upload to Apple. Apple will proof the request and issue a certificate for you. <br><br>The Certificate will contain the public key that can be downloaded to your system. <br>After you downloaded it you need to put it into your Keychain Access Application by double clicking it. It is used by cryptographic functions to generate a unique signature for your application, which is basically your Code Signing Identity.
+The certificate will also be available through the Member Center, but it will only contain the public key, so keep that private key safe.<br>
+
+Ensure you have "showXcodeLog" capability to true in order to see the Xcode logs under the hood.
+You may face "[Xcode] No signing certificate "iOS Development" found:  No "iOS Development" signing certificate matching team ID "FU4JWJYSZ3" with a private key was found." issue.
+It can be because private key is missing, corrupted or expired.<br><br>
+Generally, you have two options :<br>
+1) on that machine where certificate was created or exists, needs to go to the keychain and right click on the key(s) for private and public and export the key to a file.
+Then i can just download that file on my computer and open it, and it will be added to my keychain.
+ Sometimes, it can be the certificate repository with the all relevant private&public keys, but, those should be encrypted.
+ Just ask someone who has access to export that certificate as .p12 file, then, open it via Keychain Access on your machine and import.
+2) create a new developer certificate using your Apple ID in Xcode.
+ Get invitation to join a development team in the Apple Developer Program (managed by your company privileged users).
+ Add your iOS Development Certificate to iOS Provisioning profile used for Ad Hoc app distribution.
+ Wait for a new iOS  app build signed with updated provisioning profile.<br>
+
+<b>Note:</b> You have to add your device's UDID to iOS Provisioning Profile used to build your app.
+<br><br><br>
+
+Here is the Provisioning and Code Signing flow, step by step: <br><br>
+ - Xcode will be installed and the Intermediate Certificate will be pushed into the Keychain
+ - Certificate Signing Request (CSR) will be created.
+ - Private Key will be generated along the CSR creation and stored in the Keychain
+ - CSR will be uploaded to the Member Center
+ - Apple will proof everything and issue the Certificate
+ - Certificate will be downloaded to your Computer
+ - The Certificate will be pushed into the Keychain and paired with the private key to form the Code Signing Identity
+ - The Provisioning Profile will be created using a Certificate, App ID and Device Identifiers and downloaded by Xcode
+ - Xcode will sign the App and push Provisioning Profiles onto the Device
+ - iOS will proof if everything is correctly configured.That means that the Provisioning Profile should include the Certificate you used to sign the App, your Device UDID and the correct App ID.
+ - Your App should be running now!
+
+<br><br>
+<b>WebDriverAgent HAS TO BE SIGNED AS WELL AS SUT APP BY, BY THE SAME DEVELOPER SIGNATURE</b><br><br>
+
+Most of all Appium errors with code 65 indicating you need to sign Web Driver Agent Xcode project.
+
+WebDriverAgent needs to be built with development team and provisioning profile installed on device. The easiest way
+to do this is to specify them as desired capabilities:
+
+{
+"xcodeOrgId": "",
+"xcodeSigningId": "iPhone Developer"
+}
+
+Sometimes, it is not enough, and you'll need to navigate to appium-xcuitest-driver folder and find WebDriverAgent.xcodeproj file to open it via Xcode.
+Then, you can automatically signed or manually, the WebDriverAgentLib, WebDriverAgentRunner, IntegrationApp.
+Ensure mentioned modules are built successfully in Xcode, without errors.
+ Automatically signed means you'are pointing the provision profile to module.
+ Manually means you're changing application bundle, development team, Singing preferences in General, Build Settings tabs for each mentioned Xcode project.
+To summarize, you need to sign and rebuild the web driver agent xcode project with your developer certs.
+
+For more details go to <a>https://github.com/facebook/WebDriverAgent</a><br><br><br><br>
+
+<b>PREPARING IOS REAL DEVICES WITH XCUITest</b><br><br>
+Please, refer to <a>https://github.com/appium/appium-xcuitest-driver/blob/master/docs/real-device-config.md</a>
+<a>https://appium.readthedocs.io/en/stable/en/appium-setup/real-devices-ios/</a>
+
+<br><br><b>APPIUM SET UP FOR IOS</b><br><br>
+Please, refer to <a>https://docs.google.com/document/d/1dmY7nzYtEQP0gJbB7yh6VlGvigpZQVw14ihaXPtohF4/edit</a>
+
+<br><br><p><b> HOW TO FIND THE PROVISION PROFILE FOR IOS APPLICATION </b></p>
+
+-  take the ipa, change it to .zip
+-  unzip it
+-  look inside the inner application (find the app file within Payload folder)
+-  press "Show package contents" for app file and find embedded.mobileprovision
+-  evaluate next terminal command:
+>security cms -Di <path_to_payload>/Payload/_98point6.app/embedded.mobileprovision
+
+
+
+<br><br><b>RUN APPIUM SERVER FROM SOURCES</b><br><br>
+
+Please go to the <a>https://github.com/appium/appium/blob/master/docs/en/contributing-to-appium/appium-from-source.md</a>
+
+<br><br><b>APPIUM SERVER DEPENDENCIES</b><br><br>
+
+In order to run tests with Appium additionally you need to install next dependencies:
+ - If you are running a real device test it is necessary installing the 'idevice_id' program
+. Install with `brew install libimobiledevice --HEAD`
+ - Also you need ios-deploy. Make sure it is installed (`npm install -g ios-deploy`) and works on your system.
+ - Install Carthage  using `brew install carthage`
+
+<br><br><p><b> BUILD ios application CLIENT FROM XCODE </b></p>
+Ensure you've did next actions:
+1) do check-out from application github repo
+2) brew install Carthage
+3) carthage update --platform iOS
+4) brew install swiftlint
+5) brew install sourcery
+6) then, open project in XCode and build the application for selected Targets (iphone6,5, emulators, etc). Existing targets you can find in the Xcode Devices section.
+
+<br><br><p><b> INSTALL APPIUM WEB BASED INSPECTOR </b></p>
+1. Find the UDID for the simulator where you want to install and inspect the app:
+$ xcrun simctl list
+
+2. Install Macaca inspector:
+$ npm install app-inspector
+
+3. Start Macaca inspector with the simulator’s UDID, e.g.:
+$ ./node_modules/.bin/app-inspector -u 6EE5E44A-F4F2-4A8A-AB5C-7A7FC9CC3512
+
+4. It will start the Appium Inspector web application http://your_host:5678 by default.
+
+
+<br><br><b>IntelliJ IDEA iOS device run configuration example:</b><br><br>
+`-DforkCount=0 "-Dcucumber.options=--tags @patient -p junit:build/provider_cucumber.xml -p pretty -p html:target/cucumber-html-report" -PiOS-tests-device -Pdev clean test -q`
